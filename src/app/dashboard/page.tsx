@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient, User } from "@/lib/auth-client"; // This now works!
+import { authClient, User } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
@@ -16,16 +16,16 @@ export default function DashboardGate() {
         return;
       }
 
-      // Access the user with the exported type
+
       const user = sessionData.user as User;
 
       if (!user.role) {
         router.push("/onboard");
       } else {
         const role = user.role;
-        if (role === "ADMIN") router.push("/admin");
-        else if (role === "TUTOR") router.push("/tutor/schedule");
-        else router.push("/student/bookings");
+        if (role === "ADMIN") router.push("/admin/dashboard");
+        else if (role === "TUTOR") router.push("/tutor/dashboard");
+        else router.push("/student/dashboard");
       }
     }
   }, [sessionData, isPending, router]);
