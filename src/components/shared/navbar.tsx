@@ -40,6 +40,16 @@ export default function Navbar() {
 
   if (!mounted) return <div className="h-16 border-b bg-background" />; // Smooth placeholder
 
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/";
+        },
+      },
+    });
+  };
+
   return (
     <nav className="fixed top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 transition-colors duration-300">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -67,7 +77,7 @@ export default function Navbar() {
             <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
           ) : session ? (
             <div className="hidden md:block">
-              <UserAccountNav session={session} />
+              <UserAccountNav session={session} onSignOut={handleSignOut} />
             </div>
           ) : (
             <div className="hidden md:flex gap-2">
@@ -121,9 +131,9 @@ export default function Navbar() {
                       </div>
                       <div className="grid grid-cols-1 gap-2">
                         <Button variant="outline" asChild size="sm" onClick={() => setIsOpen(false)} className="justify-start">
-                          <Link href="/profile"><User className="mr-2 h-4 w-4" /> Profile</Link>
+                          <Link href="/settings"><User className="mr-2 h-4 w-4" /> Profile</Link>
                         </Button>
-                        <Button variant="destructive" size="sm" className="justify-start shadow-none" onClick={() => { authClient.signOut(); setIsOpen(false); }}>
+                        <Button variant="destructive" size="sm" className="justify-start shadow-none" onClick={() => { handleSignOut(); setIsOpen(false); }}>
                           <LogOut className="mr-2 h-4 w-4" /> Sign Out
                         </Button>
                       </div>
@@ -163,7 +173,7 @@ function ThemeToggler({ setTheme }: { setTheme: (t: string) => void }) {
   );
 }
 
-function UserAccountNav({ session }: { session: Session }) {
+function UserAccountNav({ session, onSignOut }: { session: Session, onSignOut: () => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -180,10 +190,21 @@ function UserAccountNav({ session }: { session: Session }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild className="cursor-pointer"><Link href="/profile" className="w-full flex items-center"><User className="mr-2 h-4 w-4" /> Profile</Link></DropdownMenuItem>
-        <DropdownMenuItem asChild className="cursor-pointer"><Link href="/settings" className="w-full flex items-center"><Settings className="mr-2 h-4 w-4" /> Settings</Link></DropdownMenuItem>
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href="/dashboard" className="w-full flex items-center">
+            <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href="/settings" className="w-full flex items-center">
+            <Settings className="mr-2 h-4 w-4" /> Settings
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-destructive focus:bg-destructive focus:text-destructive-foreground cursor-pointer" onClick={() => authClient.signOut()}>
+        <DropdownMenuItem 
+          className="text-destructive focus:bg-destructive focus:text-destructive-foreground cursor-pointer" 
+          onClick={onSignOut}
+        >
           <LogOut className="mr-2 h-4 w-4" /> Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
