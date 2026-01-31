@@ -41,7 +41,8 @@ export default function OnboardPage() {
       toast.success(`Welcome! Profile created as a ${role.toLowerCase()}.`);
       
 
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
+      router.refresh();
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       toast.error(

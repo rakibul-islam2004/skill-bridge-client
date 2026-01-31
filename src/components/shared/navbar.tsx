@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
   Menu, Sun, Moon, Monitor, User, LogOut, GraduationCap,
@@ -40,11 +41,13 @@ export default function Navbar() {
 
   if (!mounted) return <div className="h-16 border-b bg-background" />; // Smooth placeholder
 
+  const router = useRouter();
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          window.location.href = "/";
+          router.push("/");
+          router.refresh();
         },
       },
     });

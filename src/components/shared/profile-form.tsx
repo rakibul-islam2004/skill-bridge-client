@@ -62,7 +62,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Avatar className="h-20 w-20 border">
             <AvatarImage src={imageUrl} />
             <AvatarFallback className="text-xl">
