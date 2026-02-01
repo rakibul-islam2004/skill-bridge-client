@@ -36,7 +36,7 @@ function DiscoveryContent() {
   const [maxPrice, setMaxPrice] = useState("");
   const [sortBy, setSortBy] = useState("rating-desc");
 
-  const { data: tutors, isLoading: loadingTutors } = useQuery({
+  const { data: tutors, isLoading: loadingTutors, error } = useQuery({
     queryKey: ["tutors-list", search, categoryId, minPrice, maxPrice, sortBy],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -46,7 +46,9 @@ function DiscoveryContent() {
       if (maxPrice) params.append("maxPrice", maxPrice);
       if (sortBy) params.append("sortBy", sortBy);
       
+      console.log("[TutorsPage] Fetching tutors with params:", params.toString());
       const { data } = await api.get(`/booking/tutors?${params.toString()}`);
+      console.log("[TutorsPage] Received tutors:", data?.length || 0);
       return data;
     },
   });
@@ -174,7 +176,7 @@ function DiscoveryContent() {
                 <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
               </div>
             ) : tutors?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {tutors.map((tutor: any) => (
                   <TutorCard key={tutor.id} tutor={tutor} />
                 ))}

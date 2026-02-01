@@ -33,9 +33,14 @@ export function BookingSelector({ tutor, pricings, availabilities }: BookingSele
   const [selectedSlotId, setSelectedSlotId] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Filter out slots that are already booked
+  const availableSlots = availabilities.filter(slot => 
+    !slot.bookings || slot.bookings.length === 0
+  );
+
   // Group availabilities by date
   const groupedSlots: Record<string, any[]> = {};
-  availabilities.forEach(slot => {
+  availableSlots.forEach(slot => {
     const dateKey = format(new Date(slot.startTime), "yyyy-MM-dd");
     if (!groupedSlots[dateKey]) groupedSlots[dateKey] = [];
     groupedSlots[dateKey].push(slot);
