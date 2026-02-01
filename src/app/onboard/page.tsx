@@ -19,16 +19,16 @@ import { AxiosError } from "axios";
 export default function OnboardPage() {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
-  const { data: rawSession, isPending: isSessionPending } = authClient.useSession();
-  
+  const { data: rawSession, isPending: isSessionPending, refetch: refetchSession } = authClient.useSession();
   const session = rawSession as Session | null;
-
 
   useEffect(() => {
     if (!isSessionPending) {
       if (!session) {
         router.push("/login");
-      } else if (session.user?.role) {
+        return;
+      }
+      if (session.user?.role) {
         router.push("/dashboard");
       }
     }
@@ -39,8 +39,7 @@ export default function OnboardPage() {
     try {
       await api.post("/profile/onboard", { role });
       toast.success(`Welcome! Profile created as a ${role.toLowerCase()}.`);
-      
-
+      await refetchSession();
       router.push("/dashboard");
       router.refresh();
     } catch (error) {

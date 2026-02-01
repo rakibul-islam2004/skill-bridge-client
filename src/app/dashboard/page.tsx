@@ -2,33 +2,37 @@
 
 import { authClient, User } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 
 export default function DashboardGate() {
-  const { data: sessionData, isPending } = authClient.useSession();
+  const { data: sessionData, isPending, refetch: refetchSession } = authClient.useSession();
   const router = useRouter();
+  const hasRefetchedForRole = useRef(false);
 
   useEffect(() => {
-    if (!isPending) {
-      if (!sessionData) {
-        router.push("/login");
+    if (isPending) return;
+    if (!sessionData) {
+      router.push("/login");
+      return;
+    }
+
+    const user = sessionData.user as User;
+
+    if (!user.role) {
+      if (!hasRefetchedForRole.current) {
+        hasRefetchedForRole.current = true;
+        refetchSession();
         return;
       }
-
-
-      const user = sessionData.user as User;
-
-      if (!user.role) {
-        router.push("/onboard");
-      } else {
-        const role = user.role;
-        if (role === "ADMIN") router.push("/admin/dashboard");
-        else if (role === "TUTOR") router.push("/tutor/dashboard");
-        else router.push("/student/dashboard");
-      }
+      router.push("/onboard");
+      return;
     }
-  }, [sessionData, isPending, router]);
+
+    if (user.role === "ADMIN") router.push("/admin/dashboard");
+    else if (user.role === "TUTOR") router.push("/tutor/dashboard");
+    else router.push("/student/dashboard");
+  }, [sessionData, isPending, router, refetchSession]);
 
   return (
     <div className="flex h-[calc(100vh-64px)] w-full items-center justify-center">

@@ -2,26 +2,36 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { 
-  Search, 
-  ArrowRight, 
-  CheckCircle2, 
-  Users, 
+import {
+  Search,
+  ArrowRight,
+  Users,
   GraduationCap,
   Star,
   BookOpen,
   Clock,
-  Award,
-  TrendingUp
+  TrendingUp,
+  ShieldCheck,
+  CreditCard,
+  Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TutorCard } from "@/components/public/tutor-card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
+import { Footer } from "@/components/shared/footer";
 
 export default function HomePage() {
   const router = useRouter();
@@ -65,133 +75,192 @@ export default function HomePage() {
   });
 
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
+    <div className="flex flex-col min-h-screen">
+      {/* Hero */}
+      <section className="relative pt-20 pb-24 overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container relative z-10 px-4 mx-auto sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge variant="outline" className="mb-6 px-4 py-2 rounded-full border-primary/30 bg-primary/10 text-primary font-bold">
-              🎓 Join 10,000+ Students Learning Daily
+            <Badge
+              variant="outline"
+              className="mb-6 px-4 py-2 rounded-full border-primary/30 bg-primary/10 text-primary font-bold"
+            >
+              Join 10,000+ students learning daily
             </Badge>
-            
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6">
-              Learn From The Best,
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6">
+              Learn from the best,
               <br />
-              <span className="text-primary">Achieve Your Goals</span>
+              <span className="text-primary">achieve your goals</span>
             </h1>
-            
-            <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Connect with expert tutors for personalized 1-on-1 sessions. Master any skill with guidance from professionals.
+            <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
+              Connect with expert tutors for personalized 1-on-1 sessions.
+              Master any skill with guidance from verified professionals.
             </p>
-
-            <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-12">
-              <div className="relative flex items-center bg-white dark:bg-zinc-900 rounded-full shadow-lg border-2 border-primary/10 hover:border-primary/30 transition-colors">
-                <Search className="absolute left-6 h-5 w-5 text-muted-foreground" />
-                <Input 
-                  type="text" 
-                  placeholder="Search for tutors, subjects, or skills..." 
-                  className="border-none focus-visible:ring-0 text-base h-16 pl-14 pr-4 rounded-full bg-transparent"
+            <form
+              onSubmit={handleSearch}
+              className="max-w-2xl mx-auto mb-12"
+            >
+              <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-2xl bg-card border shadow-lg p-2 sm:py-2 sm:pr-2 sm:pl-5">
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground sm:block hidden" />
+                <Input
+                  type="text"
+                  placeholder="Search tutors, subjects, or skills..."
+                  className="border-0 bg-transparent focus-visible:ring-0 h-12 pl-10 sm:pl-12 flex-1"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <Button size="lg" className="h-12 px-8 rounded-full mr-2 font-bold">
+                <Button type="submit" size="lg" className="rounded-xl font-semibold">
                   Search
                 </Button>
               </div>
             </form>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
               {[
                 { label: "Students", value: "10K+", icon: Users },
                 { label: "Tutors", value: "500+", icon: GraduationCap },
                 { label: "Sessions", value: "25K+", icon: BookOpen },
                 { label: "Rating", value: "4.9★", icon: Star },
               ].map((stat, i) => (
-                <div key={i} className="flex flex-col items-center p-4 rounded-2xl bg-white dark:bg-zinc-900 border shadow-sm">
-                  <stat.icon className="h-6 w-6 text-primary mb-2" />
-                  <span className="font-black text-2xl">{stat.value}</span>
-                  <span className="text-xs text-muted-foreground font-medium">{stat.label}</span>
-                </div>
+                <Card key={i} className="p-4 text-center border-primary/10">
+                  <stat.icon className="h-5 w-5 text-primary mx-auto mb-2" />
+                  <span className="font-bold text-xl block">{stat.value}</span>
+                  <span className="text-xs text-muted-foreground">{stat.label}</span>
+                </Card>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-20 bg-zinc-50 dark:bg-zinc-900/50">
-        <div className="container px-4 mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-black mb-4">How It Works</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Get started in three simple steps
+      {/* Why SkillBridge */}
+      <section className="py-16 bg-muted/30">
+        <div className="container px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <Badge variant="secondary" className="mb-3">
+              Why choose us
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight mb-2">
+              Built for learners and tutors
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              A trusted platform that puts quality teaching and flexible learning first.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                step: "1",
-                title: "Find Your Tutor",
-                desc: "Browse our expert tutors and find the perfect match for your learning goals.",
-                icon: Search
+                icon: ShieldCheck,
+                title: "Verified tutors",
+                desc: "Every tutor is reviewed so you learn from qualified experts.",
               },
               {
-                step: "2",
-                title: "Book a Session",
-                desc: "Choose a convenient time slot and book your personalized 1-on-1 session.",
-                icon: Clock
+                icon: Clock,
+                title: "Flexible booking",
+                desc: "Pick a time that works. Reschedule when life gets in the way.",
               },
               {
-                step: "3",
-                title: "Start Learning",
-                desc: "Join your session via video call and start achieving your goals.",
-                icon: TrendingUp
-              }
-            ].map((step, i) => (
-              <div key={i} className="relative p-8 bg-white dark:bg-zinc-900 rounded-3xl border shadow-sm hover:shadow-md transition-shadow">
-                <div className="absolute -top-4 left-8 h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center font-black text-xl shadow-lg">
-                  {step.step}
-                </div>
-                <div className="mt-6">
-                  <step.icon className="h-8 w-8 text-primary mb-4" />
-                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
+                icon: CreditCard,
+                title: "Secure payments",
+                desc: "Pay safely. Your sessions are protected and transparent.",
+              },
+              {
+                icon: Target,
+                title: "1-on-1 focus",
+                desc: "Personalized sessions tailored to your pace and goals.",
+              },
+            ].map((item, i) => (
+              <Card key={i} className="border-primary/5 hover:border-primary/20 transition-colors">
+                <CardHeader>
+                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                    <item.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg">{item.title}</CardTitle>
+                  <CardDescription className="text-sm">{item.desc}</CardDescription>
+                </CardHeader>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Tutors - Only show if there are featured tutors */}
+      {/* How It Works */}
+      <section id="how-it-works" className="py-16 scroll-mt-20">
+        <div className="container px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight mb-2">
+              How it works
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Get started in three simple steps.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {[
+              {
+                step: "1",
+                title: "Find your tutor",
+                desc: "Browse experts by subject, rating, and price. Read reviews and pick the right fit.",
+                icon: Search,
+              },
+              {
+                step: "2",
+                title: "Book a session",
+                desc: "Choose a time slot and confirm. You’ll get a meeting link before the session.",
+                icon: Clock,
+              },
+              {
+                step: "3",
+                title: "Start learning",
+                desc: "Join via video call and learn at your pace. Leave a review after your session.",
+                icon: TrendingUp,
+              },
+            ].map((step, i) => (
+              <Card key={i} className="relative overflow-visible border-primary/10">
+                <div className="absolute -top-3 left-6 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+                  {step.step}
+                </div>
+                <CardHeader className="pt-8">
+                  <step.icon className="h-8 w-8 text-primary mb-2" />
+                  <CardTitle className="text-lg">{step.title}</CardTitle>
+                  <CardDescription>{step.desc}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Separator />
+
+      {/* Featured Tutors */}
       {featuredTutors.length > 0 && (
-        <section className="py-20 bg-gradient-to-b from-primary/5 to-background">
-          <div className="container px-4 mx-auto">
-            <div className="flex items-center justify-between mb-12">
+        <section className="py-16 bg-muted/20">
+          <div className="container px-4 mx-auto sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
               <div>
-                <Badge className="mb-3 bg-yellow-400 text-black hover:bg-yellow-500">
-                  ⭐ Featured
+                <Badge className="mb-2 bg-amber-500/90 text-black hover:bg-amber-500">
+                  Featured
                 </Badge>
-                <h2 className="text-3xl sm:text-4xl font-black mb-2">Featured Tutors</h2>
-                <p className="text-muted-foreground">Hand-picked experts recommended by our team</p>
+                <h2 className="text-2xl font-bold tracking-tight">
+                  Featured tutors
+                </h2>
+                <p className="text-muted-foreground text-sm mt-1">
+                  Hand-picked experts recommended by our team.
+                </p>
               </div>
-              <Button variant="outline" className="rounded-full font-bold" asChild>
+              <Button variant="outline" size="sm" className="w-fit rounded-full" asChild>
                 <Link href="/tutors">
-                  View All
+                  View all
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {loadingFeatured ? (
                 [1, 2, 3].map((i) => (
-                  <div key={i} className="h-[400px] rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+                  <Card key={i} className="h-[380px] animate-pulse" />
                 ))
               ) : (
-                featuredTutors.map((tutor: any) => (
+                featuredTutors.map((tutor: { id: string }) => (
                   <TutorCard key={tutor.id} tutor={tutor} />
                 ))
               )}
@@ -200,97 +269,118 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Top Tutors - Always shown */}
-      <section className="py-20">
-        <div className="container px-4 mx-auto">
-          <div className="flex items-center justify-between mb-12">
+      {/* Top Rated Tutors */}
+      <section className="py-16">
+        <div className="container px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
             <div>
-              <h2 className="text-3xl sm:text-4xl font-black mb-2">Top Rated Tutors</h2>
-              <p className="text-muted-foreground">Learn from highly-rated experts in their fields</p>
+              <h2 className="text-2xl font-bold tracking-tight">
+                Top rated tutors
+              </h2>
+              <p className="text-muted-foreground text-sm mt-1">
+                Highly-rated experts in their subjects.
+              </p>
             </div>
-            <Button variant="outline" className="rounded-full font-bold" asChild>
+            <Button variant="outline" size="sm" className="w-fit rounded-full" asChild>
               <Link href="/tutors">
-                View All
+                View all
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loadingTopRated ? (
               [1, 2, 3].map((i) => (
-                <div key={i} className="h-[400px] rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+                <Card key={i} className="h-[380px] animate-pulse" />
               ))
             ) : topRatedTutors?.length > 0 ? (
-              topRatedTutors.map((tutor: any) => (
+              topRatedTutors.map((tutor: { id: string }) => (
                 <TutorCard key={tutor.id} tutor={tutor} />
               ))
             ) : (
-              <div className="col-span-full py-20 text-center border-2 border-dashed rounded-3xl">
-                <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground/30" />
-                <h3 className="text-xl font-bold mb-2">No Tutors Available Yet</h3>
-                <p className="text-muted-foreground mb-6">Be the first to join as a tutor!</p>
+              <Card className="col-span-full py-16 text-center">
+                <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
+                <h3 className="text-lg font-semibold mb-2">No tutors yet</h3>
+                <p className="text-muted-foreground text-sm mb-6">
+                  Be the first to join as a tutor.
+                </p>
                 <Button asChild>
-                  <Link href="/register">Become a Tutor</Link>
+                  <Link href="/register">Become a tutor</Link>
                 </Button>
-              </div>
+              </Card>
             )}
           </div>
         </div>
       </section>
 
-      {/* Popular Categories */}
-      <section className="py-20 bg-zinc-50 dark:bg-zinc-900/50">
-        <div className="container px-4 mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black mb-4">Popular Categories</h2>
-            <p className="text-muted-foreground">Explore subjects and find your perfect tutor</p>
+      {/* Categories */}
+      <section className="py-16 bg-muted/30">
+        <div className="container px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold tracking-tight mb-2">
+              Popular categories
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Explore subjects and find your tutor.
+            </p>
           </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
-            {categories?.slice(0, 6).map((cat: any) => (
-              <Link 
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
+            {categories?.slice(0, 6).map((cat: { id: string; name: string }) => (
+              <Link
                 key={cat.id}
                 href={`/tutors?category=${cat.id}`}
-                className="group p-6 bg-white dark:bg-zinc-900 rounded-2xl border hover:border-primary hover:shadow-lg transition-all text-center"
+                className="group"
               >
-                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary group-hover:scale-110 transition-all">
-                  <BookOpen className="h-6 w-6 text-primary group-hover:text-white" />
-                </div>
-                <span className="font-bold text-sm">{cat.name}</span>
+                <Card className="p-6 text-center border-primary/5 hover:border-primary/30 hover:shadow-md transition-all h-full">
+                  <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="font-medium text-sm">{cat.name}</span>
+                </Card>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section - only for guests */}
+      {/* CTA - guests only */}
       {!session && (
-        <section className="py-20">
-          <div className="container px-4 mx-auto">
-            <div className="relative overflow-hidden bg-gradient-to-r from-primary to-blue-600 px-8 py-16 sm:py-20 rounded-3xl text-center text-white">
-              <div className="relative z-10">
-                <h2 className="text-3xl sm:text-4xl font-black mb-6">Ready to Start Learning?</h2>
-                <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
-                  Join thousands of students achieving their goals. Sign up today and book your first session.
+        <section className="py-16">
+          <div className="container px-4 mx-auto sm:px-6 lg:px-8">
+            <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-primary to-blue-600 text-primary-foreground">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,255,255,0.15),transparent)]" />
+              <CardContent className="relative py-14 px-8 text-center">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+                  Ready to start learning?
+                </h2>
+                <p className="text-primary-foreground/90 max-w-xl mx-auto mb-8">
+                  Join thousands of students. Sign up and book your first session.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Button size="lg" variant="secondary" className="h-14 px-8 rounded-full font-bold text-base" asChild>
-                    <Link href="/register">Get Started Free</Link>
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="rounded-full font-semibold"
+                    asChild
+                  >
+                    <Link href="/register">Get started free</Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="h-14 px-8 rounded-full font-bold text-base border-white/20 bg-white/10 hover:bg-white/20 text-white" asChild>
-                    <Link href="/tutors">Browse Tutors</Link>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full font-semibold border-white/30 bg-white/10 hover:bg-white/20 text-white"
+                    asChild
+                  >
+                    <Link href="/tutors">Browse tutors</Link>
                   </Button>
                 </div>
-              </div>
-              
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-              <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
       )}
+
+      <Footer />
     </div>
   );
 }

@@ -23,10 +23,10 @@ export default function Navbar() {
   const { setTheme } = useTheme();
   const [isOpen, setIsOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
+  const router = useRouter();
 
   const { data: rawData, isPending } = authClient.useSession();
   const session = rawData as Session | null;
-
 
   React.useEffect(() => {
     setMounted(true);
@@ -39,9 +39,6 @@ export default function Navbar() {
     { title: "Admin Panel", href: "/admin", icon: <ShieldCheck className="w-5 h-5" />, show: session?.user?.role === "ADMIN" },
   ];
 
-  if (!mounted) return <div className="h-16 border-b bg-background" />; // Smooth placeholder
-
-  const router = useRouter();
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -52,6 +49,10 @@ export default function Navbar() {
       },
     });
   };
+
+  if (!mounted) {
+    return <div className="h-16 border-b bg-background" />;
+  }
 
   return (
     <nav className="fixed top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 transition-colors duration-300">
