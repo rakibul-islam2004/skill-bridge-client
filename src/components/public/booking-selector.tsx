@@ -2,20 +2,18 @@
 
 import { useState } from "react";
 import { useSession } from "@/lib/auth-client";
+import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { 
   Calendar, 
   Clock, 
-  CheckCircle2, 
-  AlertCircle, 
   Loader2,
   Lock,
   ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { format, isSameDay } from "date-fns";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -29,6 +27,7 @@ interface BookingSelectorProps {
 export function BookingSelector({ tutor, pricings, availabilities }: BookingSelectorProps) {
   const { data: session } = useSession();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [selectedPricingId, setSelectedPricingId] = useState<string>("");
   const [selectedSlotId, setSelectedSlotId] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,13 +62,30 @@ export function BookingSelector({ tutor, pricings, availabilities }: BookingSele
 
     setIsSubmitting(true);
     try {
-      await api.post("/booking/confirm", {
+      const { data: res } = await api.post<{ success: boolean; data: { meetingLink?: string; startTime?: string } }>("/booking/confirm", {
         tutorId: tutor.id,
         pricingId: selectedPricingId,
         availabilityId: selectedSlotId,
       });
-      
-      toast.success("Booking confirmed successfully!");
+      const booking = res?.data;
+      const meetingLink = booking?.meetingLink;
+
+      queryClient.invalidateQueries({ queryKey: ["student-bookings"] });
+
+      if (meetingLink) {
+        toast.success("Booking confirmed!", {
+          description: "Your meeting link is ready. Copy it below or find it on My Bookings.",
+          action: {
+            label: "Copy meeting link",
+            onClick: () => {
+              navigator.clipboard.writeText(meetingLink);
+              toast.success("Meeting link copied to clipboard.");
+            },
+          },
+        });
+      } else {
+        toast.success("Booking confirmed! View your session on My Bookings.");
+      }
       router.push("/student/bookings");
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Booking failed. Please try again.");
