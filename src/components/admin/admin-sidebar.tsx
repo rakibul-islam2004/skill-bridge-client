@@ -8,6 +8,7 @@ import {
   Users,
   GraduationCap,
   BookOpen,
+  Tag,
   Settings,
 } from "lucide-react";
 
@@ -31,6 +32,11 @@ const adminNavItems = [
     title: "System Bookings",
     href: "/admin/bookings",
     icon: BookOpen,
+  },
+  {
+    title: "Manage Categories",
+    href: "/admin/categories",
+    icon: Tag,
   },
   {
     title: "Settings",
