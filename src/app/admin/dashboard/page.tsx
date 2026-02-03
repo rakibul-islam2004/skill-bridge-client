@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Users, GraduationCap, BookOpen, Loader2, Wallet } from "lucide-react";
+import { Users, GraduationCap, BookOpen, Wallet } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface AdminStats {
@@ -92,8 +92,10 @@ export default function AdminDashboard() {
 
       <Card className="min-h-[300px] flex items-center justify-center">
         <CardContent className="py-12 text-center text-muted-foreground">
-          <p className="font-medium">Manage users, bookings, and categories from the sidebar.</p>
-          <p className="text-sm mt-1">Pages for Users, Bookings, and Categories coming next.</p>
+          <p className="font-medium text-lg">Administrative Control Center</p>
+          <p className="text-sm mt-2 max-w-md mx-auto">
+            Use the sidebar to manage system users, view all bookings, and configure tutorial categories. All changes are synced in real-time.
+          </p>
         </CardContent>
       </Card>
     </div>

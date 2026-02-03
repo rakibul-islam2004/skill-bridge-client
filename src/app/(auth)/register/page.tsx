@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { registerSchema } from "@/lib/validations/auth";
-import { authClient } from "@/lib/auth-client";
+import { authClient, User } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -31,7 +31,6 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { refetch: refetchSession } = authClient.useSession();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -49,8 +48,18 @@ export default function RegisterPage() {
       {
         onSuccess: async () => {
           toast.success("Account created! Choose your role.");
-          await refetchSession();
-          router.push("/onboard");
+          const { data: session } = await authClient.getSession();
+          const user = session?.user as (User & { role?: string }) | undefined;
+          const role = user?.role;
+          
+          if (role) {
+            if (role === "ADMIN") router.push("/admin/dashboard");
+            else if (role === "TUTOR") router.push("/tutor/dashboard");
+            else router.push("/student/dashboard");
+          } else {
+            router.push("/onboard");
+          }
+          
           router.refresh();
         },
         onError: (ctx) => {

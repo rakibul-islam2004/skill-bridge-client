@@ -23,7 +23,7 @@ export function UpcomingSessions({ sessions }: UpcomingSessionsProps) {
       <div className="flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed rounded-xl">
         <Calendar className="h-10 w-10 mb-4 opacity-20" />
         <p>No upcoming sessions booked yet.</p>
-        <p className="text-sm">When students book your slots, they'll appear here.</p>
+        <p className="text-sm">When students book your slots, they&apos;ll appear here.</p>
       </div>
     );
   }

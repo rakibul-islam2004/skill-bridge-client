@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { loginSchema } from "@/lib/validations/auth";
-import { authClient } from "@/lib/auth-client";
+import { authClient, User } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -44,9 +44,19 @@ export default function LoginPage() {
         password: values.password,
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success("Welcome back to SkillBridge!");
-          router.push("/dashboard");
+          // Get the session to determine the role for direct redirect
+          const { data: session } = await authClient.getSession();
+          const user = session?.user as User | undefined;
+          const role = user?.role;
+          
+          if (role === "ADMIN") router.push("/admin/dashboard");
+          else if (role === "TUTOR") router.push("/tutor/dashboard");
+          else if (role === "STUDENT") router.push("/student/dashboard");
+          else router.push("/onboard");
+          
+          router.refresh();
         },
         onError: (ctx) => {
           toast.error(ctx.error.message);

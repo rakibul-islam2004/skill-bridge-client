@@ -1,0 +1,152 @@
+
+> skill-bridge-client@0.1.0 lint D:\programming\nextLevel\assignment\skill-bridge-client
+> eslint
+
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\(auth)\register\page.tsx
+  34:20  warning  'refetchSession' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  53:41  error    Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\admin\bookings\page.tsx
+   6:3   warning  'Calendar' is defined but never used      @typescript-eslint/no-unused-vars
+   7:3   warning  'Clock' is defined but never used         @typescript-eslint/no-unused-vars
+  10:3   warning  'BookOpen' is defined but never used      @typescript-eslint/no-unused-vars
+  13:41  warning  'CardTitle' is defined but never used     @typescript-eslint/no-unused-vars
+  33:38  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  76:49  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  94:49  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\admin\categories\page.tsx
+   89:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  116:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  203:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\admin\dashboard\page.tsx
+  5:42  warning  'Loader2' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\admin\tutors\page.tsx
+  10:3  warning  'Badge' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\admin\users\page.tsx
+    6:3   warning  'Users' is defined but never used         @typescript-eslint/no-unused-vars
+   15:41  warning  'CardTitle' is defined but never used     @typescript-eslint/no-unused-vars
+   71:20  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:49  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\not-found.tsx
+  28:27  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  28:47  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\onboard\page.tsx
+  6:22  warning  'User' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\student\bookings\page.tsx
+    9:3   warning  'User' is defined but never used                                                                                                                              @typescript-eslint/no-unused-vars
+   23:58  error    Unexpected any. Specify a different type                                                                                                                      @typescript-eslint/no-explicit-any
+   43:39  error    Unexpected any. Specify a different type                                                                                                                      @typescript-eslint/no-explicit-any
+   56:11  error    Do not use an `<a>` element to navigate to `/tutors/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+   62:34  error    Unexpected any. Specify a different type                                                                                                                      @typescript-eslint/no-explicit-any
+  144:15  error    Do not use an `<a>` element to navigate to `/tutors/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\student\my-tutors\page.tsx
+  10:3   warning  'Star' is defined but never used                                 @typescript-eslint/no-unused-vars
+  17:10  warning  'Badge' is defined but never used                                @typescript-eslint/no-unused-vars
+  78:21  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\tutor\bookings\page.tsx
+  40:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  67:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\tutor\profile\page.tsx
+  28:72  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\tutors\[id]\page.tsx
+    8:3    warning  'MapPin' is defined but never used                               @typescript-eslint/no-unused-vars
+    9:3    warning  'Clock' is defined but never used                                @typescript-eslint/no-unused-vars
+   11:3    warning  'Calendar' is defined but never used                             @typescript-eslint/no-unused-vars
+   12:3    warning  'Video' is defined but never used                                @typescript-eslint/no-unused-vars
+   13:3    warning  'Award' is defined but never used                                @typescript-eslint/no-unused-vars
+   24:10   warning  'Tabs' is defined but never used                                 @typescript-eslint/no-unused-vars
+   24:16   warning  'TabsContent' is defined but never used                          @typescript-eslint/no-unused-vars
+   24:29   warning  'TabsList' is defined but never used                             @typescript-eslint/no-unused-vars
+   24:39   warning  'TabsTrigger' is defined but never used                          @typescript-eslint/no-unused-vars
+   25:18   warning  'isSameDay' is defined but never used                            @typescript-eslint/no-unused-vars
+   26:10   warning  'useState' is defined but never used                             @typescript-eslint/no-unused-vars
+  100:56   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  130:49   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  149:112  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\app\tutors\page.tsx
+    9:3   warning  'Filter' is defined but never used          @typescript-eslint/no-unused-vars
+   10:3   warning  'X' is defined but never used               @typescript-eslint/no-unused-vars
+   11:3   warning  'ChevronDown' is defined but never used     @typescript-eslint/no-unused-vars
+   15:3   warning  'LayoutGrid' is defined but never used      @typescript-eslint/no-unused-vars
+   27:10  warning  'Badge' is defined but never used           @typescript-eslint/no-unused-vars
+   39:51  warning  'error' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  133:42  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  178:37  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\public\booking-selector.tsx
+   4:10  warning  'usePathname' is defined but never used   @typescript-eslint/no-unused-vars
+  23:10  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:13  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  25:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:38  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  91:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\public\tutor-card.tsx
+  11:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  63:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\shared\profile-form.tsx
+  55:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  60:20  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\shared\profile-form.tsx:60:20
+  58 |   };
+  59 |
+> 60 |   const imageUrl = form.watch("image");
+     |                    ^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  61 |
+  62 |   return (
+  63 |     <Form {...form}>  react-hooks/incompatible-library
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\shared\review-modal.tsx
+  20:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  49:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\shared\security-form.tsx
+  41:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\tutor\availability-manager.tsx
+  58:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  70:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\tutor\category-selector.tsx
+  46:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\tutor\pricing-manager.tsx
+  20:29  warning  'Trash2' is defined but never used        @typescript-eslint/no-unused-vars
+  57:22  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\tutor\ratings-view.tsx
+   3:31  warning  'User' is defined but never used                                 @typescript-eslint/no-unused-vars
+   8:12  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  71:15  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  71:32  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\tutor\tutor-profile-form.tsx
+  46:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\programming\nextLevel\assignment\skill-bridge-client\src\components\tutor\upcoming-sessions.tsx
+   6:3   warning  'User' is defined but never used          @typescript-eslint/no-unused-vars
+   9:3   warning  'ExternalLink' is defined but never used  @typescript-eslint/no-unused-vars
+  17:13  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 83 problems (46 errors, 37 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

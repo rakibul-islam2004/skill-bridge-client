@@ -1,63 +1,51 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import { authClient, User, Session } from "@/lib/auth-client";
+import { authClient, Session } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { GraduationCap, Presentation, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { AxiosError } from "axios";
 
 export default function OnboardPage() {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
-  const { data: rawSession, isPending: isSessionPending, refetch: refetchSession } = authClient.useSession();
+  const { data: rawSession, isPending: isSessionPending } = authClient.useSession();
   const session = rawSession as Session | null;
+
+  useEffect(() => {
+    router.prefetch("/dashboard");
+  }, [router]);
 
   useEffect(() => {
     if (!isSessionPending) {
       if (!session) {
-        router.push("/login");
-        return;
-      }
-      if (session.user?.role) {
-        router.push("/dashboard");
+        router.replace("/login");
+      } else if (session.user?.role) {
+        router.replace("/dashboard");
       }
     }
   }, [session, isSessionPending, router]);
 
-  const handleSelection = async (role: "STUDENT" | "TUTOR") => {
+  const handleSelection = useCallback(async (role: "STUDENT" | "TUTOR") => {
     setIsPending(true);
     try {
       await api.post("/profile/onboard", { role });
-      toast.success(`Welcome! Profile created as a ${role.toLowerCase()}.`);
-      await refetchSession();
+      toast.success(`Welcome!`);
       router.push("/dashboard");
       router.refresh();
-    } catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      toast.error(
-        axiosError.response?.data?.message || "Onboarding failed. Please try again."
-      );
-    } finally {
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Onboarding failed.");
       setIsPending(false);
     }
-  };
-
+  }, [router]);
 
   if (isSessionPending || session?.user?.role) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-64px)]" role="status" aria-live="polite" aria-busy="true">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
-        <span className="sr-only">Loading...</span>
+      <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
       </div>
     );
   }
@@ -72,48 +60,39 @@ export default function OnboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-6">
-          <Button
-            variant="outline"
-            className="h-44 flex flex-col gap-4 border-2 hover:border-primary hover:bg-primary/5 transition-all text-center"
+          <OnboardButton
+            icon={<GraduationCap className="h-10 w-10 text-primary" />}
+            title="Student"
+            description="I want to learn"
             onClick={() => handleSelection("STUDENT")}
             disabled={isPending}
-            aria-label="I want to learn — sign up as Student"
-          >
-            <div className="p-4 bg-primary/10 rounded-full">
-              <GraduationCap className="h-10 w-10 text-primary" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold">Student</span>
-              <span className="text-xs text-muted-foreground font-normal">
-                I want to learn
-              </span>
-            </div>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="h-44 flex flex-col gap-4 border-2 hover:border-primary hover:bg-primary/5 transition-all text-center"
+          />
+          <OnboardButton
+            icon={<Presentation className="h-10 w-10 text-primary" />}
+            title="Tutor"
+            description="I want to teach"
             onClick={() => handleSelection("TUTOR")}
             disabled={isPending}
-            aria-label="I want to teach — sign up as Tutor"
-          >
-            <div className="p-4 bg-primary/10 rounded-full">
-              <Presentation className="h-10 w-10 text-primary" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold">Tutor</span>
-              <span className="text-xs text-muted-foreground font-normal">
-                I want to teach
-              </span>
-            </div>
-          </Button>
+          />
         </CardContent>
-        {isPending && (
-          <div className="flex justify-center pb-6">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-          </div>
-        )}
       </Card>
     </div>
+  );
+}
+
+function OnboardButton({ icon, title, description, onClick, disabled }: any) {
+  return (
+    <Button
+      variant="outline"
+      className="h-44 flex flex-col gap-4 border-2 hover:border-primary hover:bg-primary/5 transition-all"
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <div className="p-4 bg-primary/10 rounded-full">{icon}</div>
+      <div className="flex flex-col text-center">
+        <span className="text-xl font-bold">{title}</span>
+        <span className="text-xs text-muted-foreground font-normal">{description}</span>
+      </div>
+    </Button>
   );
 }
