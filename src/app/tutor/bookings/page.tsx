@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import {
   Calendar,
@@ -9,18 +9,36 @@ import {
   Loader2,
   CalendarDays,
   Star,
+  CheckCircle2,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 export default function TutorBookingsPage() {
+  const queryClient = useQueryClient();
   const { data: bookings, isLoading } = useQuery({
     queryKey: ["tutor-bookings"],
     queryFn: async () => {
       const { data } = await api.get("/booking/my-bookings");
       return data;
+    },
+  });
+
+  const markCompletedMutation = useMutation({
+    mutationFn: async (bookingId: string) => {
+      const { data } = await api.patch(`/booking/${bookingId}/complete`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tutor-bookings"] });
+      queryClient.invalidateQueries({ queryKey: ["tutor-dashboard"] });
+      toast.success("Session marked as completed! Balance updated.");
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to mark session as completed");
     },
   });
 
@@ -52,6 +70,10 @@ export default function TutorBookingsPage() {
               booking.meetingLink &&
               (booking.status === "CONFIRMED" || booking.status === "PENDING") &&
               !isPast;
+            const canMarkCompleted =
+              booking.status === "CONFIRMED" &&
+              isPast &&
+              !booking.review; // Can mark completed if past and not already reviewed
 
             return (
               <div
@@ -117,6 +139,35 @@ export default function TutorBookingsPage() {
                         Join Meeting
                       </a>
                     </Button>
+                  )}
+                  {canMarkCompleted && (
+                    <Button
+                      variant="outline"
+                      className="flex-1 md:flex-none gap-2 rounded-xl border-green-500/20 hover:bg-green-500/5 text-green-600 font-bold"
+                      onClick={() => markCompletedMutation.mutate(booking.id)}
+                      disabled={markCompletedMutation.isPending}
+                    >
+                      {markCompletedMutation.isPending ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Marking...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="h-4 w-4" />
+                          Mark as Completed
+                        </>
+                      )}
+                    </Button>
+                  )}
+                  {booking.status === "COMPLETED" && !booking.review && (
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-500/10 text-green-600 border-green-500/20 gap-1 font-bold"
+                    >
+                      <CheckCircle2 className="h-3 w-3" />
+                      Completed
+                    </Badge>
                   )}
                   {booking.review && !canJoin && (
                     <Badge
