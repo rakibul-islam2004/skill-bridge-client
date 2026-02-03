@@ -55,8 +55,9 @@ export default function OnboardPage() {
 
   if (isSessionPending || session?.user?.role) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      <div className="flex items-center justify-center min-h-[calc(100vh-64px)]" role="status" aria-live="polite" aria-busy="true">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
+        <span className="sr-only">Loading...</span>
       </div>
     );
   }
@@ -76,6 +77,7 @@ export default function OnboardPage() {
             className="h-44 flex flex-col gap-4 border-2 hover:border-primary hover:bg-primary/5 transition-all text-center"
             onClick={() => handleSelection("STUDENT")}
             disabled={isPending}
+            aria-label="I want to learn — sign up as Student"
           >
             <div className="p-4 bg-primary/10 rounded-full">
               <GraduationCap className="h-10 w-10 text-primary" />
@@ -93,6 +95,7 @@ export default function OnboardPage() {
             className="h-44 flex flex-col gap-4 border-2 hover:border-primary hover:bg-primary/5 transition-all text-center"
             onClick={() => handleSelection("TUTOR")}
             disabled={isPending}
+            aria-label="I want to teach — sign up as Tutor"
           >
             <div className="p-4 bg-primary/10 rounded-full">
               <Presentation className="h-10 w-10 text-primary" />

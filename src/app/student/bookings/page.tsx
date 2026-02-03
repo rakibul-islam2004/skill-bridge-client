@@ -33,8 +33,9 @@ export default function StudentBookingsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-[calc(100vh-100px)] items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      <div className="flex h-[calc(100vh-100px)] items-center justify-center" role="status" aria-live="polite">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
+        <span className="sr-only">Loading your bookings...</span>
       </div>
     );
   }
@@ -115,14 +116,14 @@ export default function StudentBookingsPage() {
                   )}
                   {booking.meetingLink && booking.status === "CONFIRMED" && !isPast && (
                     <Button className="flex-1 md:flex-none gap-2 rounded-xl shadow-lg" asChild>
-                      <a href={booking.meetingLink} target="_blank" rel="noopener noreferrer">
+                      <a href={booking.meetingLink} target="_blank" rel="noopener noreferrer" aria-label="Join meeting (opens in new tab)">
                         <Video className="h-4 w-4" />
                         Join Meeting
                       </a>
                     </Button>
                   )}
                   <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0" asChild>
-                    <a href={`/tutors/${booking.tutorId}`}>
+                    <a href={`/tutors/${booking.tutorId}`} aria-label={`View ${booking.tutor?.user?.name ?? "tutor"} profile`}>
                       <ExternalLink className="h-4 w-4" />
                     </a>
                   </Button>

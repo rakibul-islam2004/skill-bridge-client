@@ -23,12 +23,15 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const { refetch: refetchSession } = authClient.useSession();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -41,11 +44,14 @@ export default function RegisterPage() {
         email: values.email,
         password: values.password,
         name: values.name,
-        callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND_URL || (typeof window !== "undefined" ? window.location.origin : "")}/dashboard`,
+        callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND_URL || (typeof window !== "undefined" ? window.location.origin : "")}/onboard`,
       },
       {
-        onSuccess: () => {
-          toast.success("Success! Redirecting to onboard...");
+        onSuccess: async () => {
+          toast.success("Account created! Choose your role.");
+          await refetchSession();
+          router.push("/onboard");
+          router.refresh();
         },
         onError: (ctx) => {
           toast.error(ctx.error.message);
@@ -130,9 +136,13 @@ export default function RegisterPage() {
                 type="submit"
                 className="w-full h-11"
                 disabled={form.formState.isSubmitting}
+                aria-busy={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? (
-                  <Loader2 className="animate-spin" />
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    <span className="sr-only">Creating account...</span>
+                  </>
                 ) : (
                   "Register"
                 )}
@@ -158,7 +168,7 @@ export default function RegisterPage() {
             }
           >
             <FcGoogle className="h-5 w-5" />
-            Google
+            Sign up with Google
           </Button>
         </CardContent>
         <CardFooter className="justify-center">

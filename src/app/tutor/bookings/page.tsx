@@ -26,8 +26,9 @@ export default function TutorBookingsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-[calc(100vh-100px)] items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      <div className="flex h-[calc(100vh-100px)] items-center justify-center" role="status" aria-live="polite">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
+        <span className="sr-only">Loading teaching sessions...</span>
       </div>
     );
   }
@@ -110,6 +111,7 @@ export default function TutorBookingsPage() {
                         href={booking.meetingLink}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Join meeting with student (opens in new tab)"
                       >
                         <Video className="h-4 w-4" />
                         Join Meeting

@@ -45,10 +45,7 @@ function DiscoveryContent() {
       if (minPrice) params.append("minPrice", minPrice);
       if (maxPrice) params.append("maxPrice", maxPrice);
       if (sortBy) params.append("sortBy", sortBy);
-      
-      console.log("[TutorsPage] Fetching tutors with params:", params.toString());
       const { data } = await api.get(`/booking/tutors?${params.toString()}`);
-      console.log("[TutorsPage] Received tutors:", data?.length || 0);
       return data;
     },
   });
@@ -78,12 +75,13 @@ function DiscoveryContent() {
             <p className="text-muted-foreground mt-2">Explore {tutors?.length || 0} world-class tutors ready to help you.</p>
           </div>
           <div className="flex-1 max-w-xl group relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors group-focus-within:text-primary" aria-hidden />
             <Input 
               placeholder="Search by name or keyword..." 
               className="h-14 pl-12 rounded-2xl shadow-sm focus-visible:ring-primary/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search tutors by name or keyword"
             />
           </div>
         </div>

@@ -67,14 +67,16 @@ export function ReviewModal({ booking, isOpen, onOpenChange }: ReviewModalProps)
 
           <div className="py-8 space-y-8">
             {/* Star Selector */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-3" role="group" aria-label="Rate your session">
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     type="button"
                     onClick={() => setRating(star)}
-                    className="transition-transform hover:scale-125 focus:outline-none"
+                    className="transition-transform hover:scale-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
+                    aria-label={`Rate ${star} star${star === 1 ? "" : "s"}`}
+                    aria-pressed={rating === star}
                   >
                     <Star 
                       className={`h-10 w-10 ${
@@ -82,6 +84,7 @@ export function ReviewModal({ booking, isOpen, onOpenChange }: ReviewModalProps)
                           ? "fill-yellow-400 text-yellow-400" 
                           : "text-zinc-200 dark:text-zinc-800"
                       }`} 
+                      aria-hidden
                     />
                   </button>
                 ))}
@@ -95,15 +98,18 @@ export function ReviewModal({ booking, isOpen, onOpenChange }: ReviewModalProps)
             </div>
 
             <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest opacity-60">
+              <label htmlFor="review-comment" className="text-xs font-black uppercase tracking-widest opacity-60">
                 Your Feedback
               </label>
               <Textarea
+                id="review-comment"
                 placeholder="Share what you liked or how the tutor could improve..."
                 className="min-h-[120px] rounded-2xl bg-zinc-50 dark:bg-black/40 border-none shadow-inner resize-none focus-visible:ring-primary/20"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
+                aria-describedby="review-comment-hint"
               />
+              <span id="review-comment-hint" className="sr-only">Required. Share what you liked or how the tutor could improve.</span>
             </div>
           </div>
 

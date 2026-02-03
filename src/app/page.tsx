@@ -102,11 +102,12 @@ export default function HomePage() {
               <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-2xl bg-card border shadow-lg p-2 sm:py-2 sm:pr-2 sm:pl-5">
                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground sm:block hidden" />
                 <Input
-                  type="text"
+                  type="search"
                   placeholder="Search tutors, subjects, or skills..."
                   className="border-0 bg-transparent focus-visible:ring-0 h-12 pl-10 sm:pl-12 flex-1"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  aria-label="Search tutors, subjects, or skills"
                 />
                 <Button type="submit" size="lg" className="rounded-xl font-semibold">
                   Search

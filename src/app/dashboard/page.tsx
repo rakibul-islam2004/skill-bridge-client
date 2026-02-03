@@ -35,9 +35,9 @@ export default function DashboardGate() {
   }, [sessionData, isPending, router, refetchSession]);
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full items-center justify-center">
+    <div className="flex h-[calc(100vh-64px)] w-full items-center justify-center" role="status" aria-live="polite" aria-busy="true">
       <div className="flex flex-col items-center gap-2">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
         <p className="text-sm text-muted-foreground animate-pulse">
           Checking your credentials...
         </p>

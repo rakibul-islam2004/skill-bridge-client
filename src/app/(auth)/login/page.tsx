@@ -125,9 +125,13 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full h-11"
                 disabled={form.formState.isSubmitting}
+                aria-busy={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? (
-                  <Loader2 className="animate-spin" />
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    <span className="sr-only">Signing in...</span>
+                  </>
                 ) : (
                   "Login"
                 )}

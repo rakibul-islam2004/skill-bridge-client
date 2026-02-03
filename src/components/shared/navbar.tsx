@@ -55,7 +55,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 transition-colors duration-300">
+    <nav className="fixed top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 transition-colors duration-300" aria-label="Main navigation">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         
         {/* LOGO */}
@@ -181,10 +181,16 @@ function UserAccountNav({ session, onSignOut }: { session: Session, onSignOut: (
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-9 w-9 cursor-pointer border hover:ring-2 hover:ring-primary/20 transition-all">
-          <AvatarImage src={session.user.image || ""} />
-          <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
-        </Avatar>
+        <button
+          type="button"
+          className="rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          aria-label="Open account menu"
+        >
+          <Avatar className="h-9 w-9 cursor-pointer border hover:ring-2 hover:ring-primary/20 transition-all">
+            <AvatarImage src={session.user.image || ""} />
+            <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
+          </Avatar>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuLabel className="font-normal">

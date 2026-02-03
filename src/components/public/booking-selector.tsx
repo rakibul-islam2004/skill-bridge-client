@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -116,12 +117,15 @@ export function BookingSelector({ tutor, pricings, availabilities }: BookingSele
             {pricings.map((p) => (
               <button
                 key={p.id}
+                type="button"
                 onClick={() => setSelectedPricingId(p.id)}
                 className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all ${
                   selectedPricingId === p.id 
                     ? "border-primary bg-primary/5 ring-4 ring-primary/10" 
                     : "border-transparent bg-zinc-50 dark:bg-black/40 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
+                aria-pressed={selectedPricingId === p.id}
+                aria-label={`${p.durationMinutes} minutes session — ৳${p.price}`}
               >
                 <div className="text-left">
                   <p className="font-bold text-sm">{p.durationMinutes} Minutes Session</p>
@@ -167,12 +171,15 @@ export function BookingSelector({ tutor, pricings, availabilities }: BookingSele
                 {groupedSlots[activeDate]?.map((slot) => (
                   <button
                     key={slot.id}
+                    type="button"
                     onClick={() => setSelectedSlotId(slot.id)}
                     className={`p-3 rounded-xl border-2 text-xs font-bold transition-all ${
                       selectedSlotId === slot.id 
                         ? "border-primary bg-primary/5" 
                         : "border-transparent bg-zinc-50 dark:bg-black/40 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     }`}
+                    aria-pressed={selectedSlotId === slot.id}
+                    aria-label={`Select time slot ${format(new Date(slot.startTime), "p")}`}
                   >
                     {format(new Date(slot.startTime), "p")}
                   </button>
@@ -191,7 +198,7 @@ export function BookingSelector({ tutor, pricings, availabilities }: BookingSele
       <CardFooter className="p-6 bg-zinc-50 dark:bg-black/40 border-t">
         {!session ? (
           <Button className="w-full h-14 rounded-2xl font-black gap-2" asChild>
-            <Link href={`/login?redirect=${typeof window !== 'undefined' ? window.location.pathname : ''}`}>
+            <Link href={`/login?redirect=${encodeURIComponent(pathname || "/tutors")}`}>
               <Lock className="h-4 w-4" />
               Login to Book
             </Link>

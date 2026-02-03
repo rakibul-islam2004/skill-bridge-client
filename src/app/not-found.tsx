@@ -9,7 +9,7 @@ export default function NotFound() {
   const router = useRouter();
 
   return (
-    <div className="flex min-h-[calc(100vh-64px)] flex-col items-center justify-center p-6 text-center">
+    <main className="flex min-h-[calc(100vh-64px)] flex-col items-center justify-center p-6 text-center" role="main">
       <div className="relative mb-8 text-black dark:text-white">
         <div className="absolute -inset-4 rounded-full bg-primary/10 blur-2xl flex items-center justify-center animate-pulse" />
         <div className="relative rounded-full bg-background border-4 border-primary/20 p-8">
@@ -49,6 +49,6 @@ export default function NotFound() {
       <div className="mt-16 text-sm text-muted-foreground">
         <p>Lost? Check out our <Link href="/tutors" className="text-primary hover:underline font-medium">Tutor Catalog</Link></p>
       </div>
-    </div>
+    </main>
   );
 }
