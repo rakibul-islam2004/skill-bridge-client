@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { loginSchema } from "@/lib/validations/auth";
-import { authClient, User } from "@/lib/auth-client";
+import { authClient, User, useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,12 +26,24 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const { data: session } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      const user = session.user as User;
+      const role = user?.role;
+      if (role === "ADMIN") router.push("/admin/dashboard");
+      else if (role === "TUTOR") router.push("/tutor/dashboard");
+      else if (role === "STUDENT") router.push("/student/dashboard");
+      else router.push("/onboard");
+    }
+  }, [session, router]);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
