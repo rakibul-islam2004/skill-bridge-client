@@ -1,20 +1,20 @@
 import { createAuthClient } from "better-auth/react";
 
 const getBaseUrl = () => {
-  // 1. Browser Check: Use the current domain (perfect for proxy/rewrites)
+  // Use the environment variable if it's a full URL (important for Build/SSR)
+  const envUrl = process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
+
+  if (envUrl && envUrl.startsWith("http")) {
+    return envUrl;
+  }
+
+  // Fallback for Browser: Use current origin to maintain proxy tunnel
   if (typeof window !== "undefined") {
     return window.location.origin;
   }
 
-  // 2. SSR/Build Check: Better Auth REQUIRES a full URL here
-  const envUrl = process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
-
-  // If env is missing or is just "/", use the production fallback
-  if (!envUrl || envUrl === "/") {
-    return "https://skill-bridge-client-five.vercel.app";
-  }
-
-  return envUrl;
+  // Hard fallback for Vercel Build Server (prevents ERR_INVALID_URL)
+  return "https://skill-bridge-client-five.vercel.app";
 };
 
 export const authClient = createAuthClient({
