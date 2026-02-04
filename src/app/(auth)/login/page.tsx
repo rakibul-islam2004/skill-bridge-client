@@ -31,19 +31,28 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, isPending, error } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (session) {
       const user = session.user as User;
       const role = user?.role;
+      
       if (role === "ADMIN") router.push("/admin/dashboard");
       else if (role === "TUTOR") router.push("/tutor/dashboard");
       else if (role === "STUDENT") router.push("/student/dashboard");
       else router.push("/onboard");
     }
-  }, [session, router]);
+  }, [session, router, isPending, error]);
+
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-64px)]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
