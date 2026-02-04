@@ -1,7 +1,7 @@
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "https://skill-bridge-client-five.vercel.app", // Fallback to production URL
+  baseURL: "/", 
   basePath: "/api/v1/auth",
   fetchOptions: {
     credentials: "include",

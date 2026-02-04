@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { authClient, Session } from "@/lib/auth-client";
@@ -9,35 +9,43 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { GraduationCap, Presentation, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+interface OnboardError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+interface OnboardButtonProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  onClick: () => void;
+  disabled: boolean;
+}
+
 export default function OnboardPage() {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
   const { data: rawSession, isPending: isSessionPending } = authClient.useSession();
   const session = rawSession as Session | null;
 
-  useEffect(() => {
-    router.prefetch("/dashboard");
-  }, [router]);
-
-  useEffect(() => {
-    if (!isSessionPending) {
-      if (!session) {
-        router.replace("/login");
-      } else if (session.user?.role) {
-        router.replace("/dashboard");
-      }
-    }
-  }, [session, isSessionPending, router]);
-
   const handleSelection = useCallback(async (role: "STUDENT" | "TUTOR") => {
     setIsPending(true);
     try {
       await api.post("/profile/onboard", { role });
+      await authClient.getSession(); 
+      
       toast.success(`Welcome!`);
-      router.push("/dashboard");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Onboarding failed.");
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      const err = error as OnboardError;
+      const errorMessage = err.response?.data?.message || err.message || "Onboarding failed.";
+      
+      toast.error(errorMessage);
       setIsPending(false);
     }
   }, [router]);
@@ -80,7 +88,7 @@ export default function OnboardPage() {
   );
 }
 
-function OnboardButton({ icon, title, description, onClick, disabled }: any) {
+function OnboardButton({ icon, title, description, onClick, disabled }: OnboardButtonProps) {
   return (
     <Button
       variant="outline"

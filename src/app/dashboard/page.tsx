@@ -12,9 +12,13 @@ export default function DashboardGate() {
 
   useEffect(() => {
     if (isPending) return;
+
+    // Wait slightly for session to stabilize on Vercel
     if (!sessionData) {
-      router.push("/login");
-      return;
+      const timer = setTimeout(() => {
+        if (!sessionData) router.push("/login");
+      }, 500);
+      return () => clearTimeout(timer);
     }
 
     const user = sessionData.user as User;
@@ -29,17 +33,18 @@ export default function DashboardGate() {
       return;
     }
 
+    // Role-based routing
     if (user.role === "ADMIN") router.push("/admin/dashboard");
     else if (user.role === "TUTOR") router.push("/tutor/dashboard");
     else router.push("/student/dashboard");
   }, [sessionData, isPending, router, refetchSession]);
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full items-center justify-center" role="status" aria-live="polite" aria-busy="true">
+    <div className="flex h-[calc(100vh-64px)] w-full items-center justify-center">
       <div className="flex flex-col items-center gap-2">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
         <p className="text-sm text-muted-foreground animate-pulse">
-          Checking your credentials...
+          Syncing your account...
         </p>
       </div>
     </div>

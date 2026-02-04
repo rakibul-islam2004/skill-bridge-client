@@ -1,6 +1,12 @@
 # SkillBridge - Full-Stack Tutor-Student Marketplace
 
+[![Live Demo](https://img.shields.io)](https://skill-bridge-client-five.vercel.app)
+
 SkillBridge is a high-performance, responsive platform designed to bridge the gap between students and expert tutors. Built with **Next.js 16**, **React 19**, and **Node.js/Express**, it provides a seamless 1-on-1 learning experience through specialized role-based portals, robust scheduling algorithms, and secure authentication.
+
+**🔗 Live Website:** [https://skill-bridge-client-five.vercel.app](https://skill-bridge-client-five.vercel.app)
+
+---
 
 ## 📋 Table of Contents
 - [Project Overview](#-project-overview)
@@ -20,7 +26,6 @@ SkillBridge facilitates professional learning connections by offering three dist
 - **Tutors:** Can manage their teaching business, set flexible availability, and track earnings.
 - **Admins:** Oversee platform integrity, manage users, and curate featured content.
 
-The application follows a **mobile-first, fully responsive design** with full dark mode support and optimized performance.
 
 ---
 
