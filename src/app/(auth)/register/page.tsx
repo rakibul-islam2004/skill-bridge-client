@@ -31,7 +31,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, isPending, error } = useSession();
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -43,11 +43,20 @@ export default function RegisterPage() {
       else if (role === "STUDENT") router.push("/student/dashboard");
       else router.push("/onboard");
     }
-  }, [session, router]);
+  }, [session, router, isPending, error]);
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: { name: "", email: "", password: "" },
   });
+
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-64px)]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     await authClient.signUp.email(

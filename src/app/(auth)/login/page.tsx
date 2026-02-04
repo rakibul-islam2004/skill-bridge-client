@@ -46,6 +46,11 @@ export default function LoginPage() {
     }
   }, [session, router, isPending, error]);
 
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
+
   if (isPending) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-64px)]">
@@ -53,10 +58,6 @@ export default function LoginPage() {
       </div>
     );
   }
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
-  });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     await authClient.signIn.email(
