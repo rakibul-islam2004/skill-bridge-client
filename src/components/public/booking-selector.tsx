@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-// 1. Ensure usePathname is imported from next/navigation
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,21 +31,17 @@ export function BookingSelector({
 }: BookingSelectorProps) {
   const { data: session } = useSession();
   const router = useRouter();
-
-  // 2. CRITICAL FIX: Define pathname using the hook
   const pathname = usePathname();
-
   const queryClient = useQueryClient();
+
   const [selectedPricingId, setSelectedPricingId] = useState<string>("");
   const [selectedSlotId, setSelectedSlotId] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Filter out slots that are already booked
   const availableSlots = availabilities.filter(
     (slot) => !slot.bookings || slot.bookings.length === 0,
   );
 
-  // Group availabilities by date
   const groupedSlots: Record<string, any[]> = {};
   availableSlots.forEach((slot) => {
     const dateKey = format(new Date(slot.startTime), "yyyy-MM-dd");
@@ -60,7 +55,6 @@ export function BookingSelector({
   const handleBooking = async () => {
     if (!session) {
       toast.error("Please login to book a session");
-      // 3. FIX: Use the safe pathname variable instead of window.location
       router.push(
         `/login?redirect=${encodeURIComponent(pathname || "/tutors")}`,
       );
@@ -74,10 +68,7 @@ export function BookingSelector({
 
     setIsSubmitting(true);
     try {
-      const { data: res } = await api.post<{
-        success: boolean;
-        data: { meetingLink?: string; startTime?: string };
-      }>("/booking/confirm", {
+      await api.post("/booking/confirm", {
         tutorId: tutor.id,
         pricingId: selectedPricingId,
         availabilityId: selectedSlotId,
@@ -87,9 +78,7 @@ export function BookingSelector({
       toast.success("Booking confirmed!");
       router.push("/student/bookings");
     } catch (err: any) {
-      toast.error(
-        err.response?.data?.message || "Booking failed. Please try again.",
-      );
+      toast.error(err.response?.data?.message || "Booking failed.");
     } finally {
       setIsSubmitting(false);
     }
@@ -99,17 +88,16 @@ export function BookingSelector({
 
   return (
     <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-white dark:bg-zinc-900 border-2 border-primary/10">
-      <CardHeader className="bg-primary/5 pb-6">
-        <CardTitle className="text-xl font-black flex items-center gap-2">
+      <CardHeader className="bg-zinc-950 pb-6 border-b border-white/5">
+        <CardTitle className="text-xl font-black flex items-center gap-2 text-zinc-100">
           <Calendar className="h-5 w-5 text-primary" />
           Book Your Session
         </CardTitle>
       </CardHeader>
 
       <CardContent className="p-6 space-y-8">
-        {/* Step 1: Select Duration */}
         <div className="space-y-4">
-          <label className="text-xs font-black uppercase tracking-widest opacity-60 flex items-center gap-2">
+          <label className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
             <span className="h-5 w-5 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">
               1
             </span>
@@ -128,7 +116,7 @@ export function BookingSelector({
                 }`}
               >
                 <div className="text-left">
-                  <p className="font-bold text-sm">
+                  <p className="font-bold text-sm text-zinc-900 dark:text-zinc-100">
                     {p.durationMinutes} Minutes Session
                   </p>
                   <p className="font-black text-primary text-lg">৳{p.price}</p>
@@ -138,9 +126,8 @@ export function BookingSelector({
           </div>
         </div>
 
-        {/* Step 2: Select Date & Slot */}
         <div className="space-y-4">
-          <label className="text-xs font-black uppercase tracking-widest opacity-60 flex items-center gap-2">
+          <label className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
             <span className="h-5 w-5 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">
               2
             </span>
@@ -157,7 +144,7 @@ export function BookingSelector({
                     className={`flex-shrink-0 flex flex-col items-center justify-center w-14 h-16 rounded-2xl transition-all ${
                       activeDate === date
                         ? "bg-primary text-white shadow-lg"
-                        : "bg-zinc-50 dark:bg-black/40 hover:bg-zinc-100"
+                        : "bg-zinc-50 dark:bg-black/40 hover:bg-zinc-100 text-zinc-600 dark:text-zinc-400"
                     }`}
                   >
                     <span className="text-[10px] uppercase font-bold">
@@ -178,8 +165,8 @@ export function BookingSelector({
                     onClick={() => setSelectedSlotId(slot.id)}
                     className={`p-3 rounded-xl border-2 text-xs font-bold transition-all ${
                       selectedSlotId === slot.id
-                        ? "border-primary bg-primary/5"
-                        : "border-transparent bg-zinc-50 dark:bg-black/40 hover:bg-zinc-100"
+                        ? "border-primary bg-primary/5 text-primary"
+                        : "border-transparent bg-zinc-50 dark:bg-black/40 text-zinc-600 dark:text-zinc-400"
                     }`}
                   >
                     {format(new Date(slot.startTime), "p")}
@@ -188,9 +175,9 @@ export function BookingSelector({
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center bg-zinc-50 dark:bg-black/40 rounded-3xl border-2 border-dashed">
+            <div className="p-8 text-center bg-zinc-50 dark:bg-black/40 rounded-3xl border-2 border-dashed border-zinc-200 dark:border-zinc-800">
               <Clock className="h-8 w-8 mx-auto mb-2 opacity-20" />
-              <p className="text-xs font-medium text-muted-foreground">
+              <p className="text-xs font-bold text-zinc-500">
                 No slots available.
               </p>
             </div>
@@ -198,10 +185,12 @@ export function BookingSelector({
         </div>
       </CardContent>
 
-      <CardFooter className="p-6 bg-zinc-50 dark:bg-black/40 border-t">
-        {/* 4. FIX: pathname is now safely defined for this Link component */}
+      <CardFooter className="p-6 bg-zinc-950 dark:bg-black border-t border-white/5">
         {!session ? (
-          <Button className="w-full h-14 rounded-2xl font-black gap-2" asChild>
+          <Button
+            className="w-full h-14 rounded-2xl font-black gap-2 shadow-lg"
+            asChild
+          >
             <Link
               href={`/login?redirect=${encodeURIComponent(pathname || "/tutors")}`}
             >
@@ -217,12 +206,14 @@ export function BookingSelector({
         ) : (
           <Button
             onClick={handleBooking}
-            className="w-full h-14 rounded-2xl font-black gap-2 shadow-xl hover:shadow-primary/20 transition-all"
+            className="w-full h-14 rounded-2xl font-black gap-2 shadow-xl shadow-primary/20 transition-all"
             disabled={!selectedPricingId || !selectedSlotId}
           >
             Confirm & Book
             {selectedPricing && (
-              <span className="ml-1">for ৳{selectedPricing.price}</span>
+              <span className="ml-1 opacity-80">
+                for ৳{selectedPricing.price}
+              </span>
             )}
             <ArrowRight className="h-4 w-4" />
           </Button>
