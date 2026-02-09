@@ -2,34 +2,27 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { useParams } from "next/navigation";
-import { 
-  Star, 
-  MapPin, 
-  Clock, 
-  ShieldCheck, 
-  Calendar, 
-  Video,
-  Award,
+import { useParams, usePathname } from "next/navigation";
+import {
+  Star,
+  ShieldCheck,
   GraduationCap,
   MessageSquare,
   Loader2,
-  ChevronRight,
-  Info
+  Info,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { format, isSameDay } from "date-fns";
-import { useState } from "react";
+import { format } from "date-fns";
 import Link from "next/link";
 import { BookingSelector } from "../../../components/public/booking-selector";
 
 export default function PublicTutorProfile() {
   const { id } = useParams();
-  
+  const pathname = usePathname();
+
   const { data: tutor, isLoading } = useQuery({
     queryKey: ["public-tutor", id],
     queryFn: async () => {
@@ -66,7 +59,6 @@ export default function PublicTutorProfile() {
 
       <div className="container mx-auto px-4 -mt-24 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
           {/* Left Column: Profile Card & Bio */}
           <div className="lg:col-span-2 space-y-8">
             <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden">
@@ -80,8 +72,13 @@ export default function PublicTutorProfile() {
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-4xl font-black tracking-tight">{tutor.user?.name}</h1>
-                      <Badge variant="secondary" className="bg-green-500/10 text-green-600 dark:text-green-400 border-none px-3 font-bold gap-1">
+                      <h1 className="text-4xl font-black tracking-tight">
+                        {tutor.user?.name}
+                      </h1>
+                      <Badge
+                        variant="secondary"
+                        className="bg-green-500/10 text-green-600 dark:text-green-400 border-none px-3 font-bold gap-1"
+                      >
                         <ShieldCheck className="h-3 w-3" />
                         Verified
                       </Badge>
@@ -98,7 +95,10 @@ export default function PublicTutorProfile() {
                     </div>
                     <div className="mt-6 flex flex-wrap gap-2">
                       {tutor.tutorCategories?.map((tc: any) => (
-                        <Badge key={tc.id} className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 transition-colors px-4 py-1 rounded-full">
+                        <Badge
+                          key={tc.id}
+                          className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 transition-colors px-4 py-1 rounded-full"
+                        >
                           {tc.category?.name}
                         </Badge>
                       ))}
@@ -109,7 +109,9 @@ export default function PublicTutorProfile() {
                 <div className="mt-12 space-y-6">
                   <h3 className="text-2xl font-black">About the Tutor</h3>
                   <p className="text-lg leading-relaxed text-muted-foreground whitespace-pre-line">
-                    {tutor.experienceDetails || tutor.bio || "No detailed background provided yet."}
+                    {tutor.experienceDetails ||
+                      tutor.bio ||
+                      "No detailed background provided yet."}
                   </p>
                 </div>
               </CardContent>
@@ -128,25 +130,43 @@ export default function PublicTutorProfile() {
                 {tutor.reviews?.length > 0 ? (
                   <div className="space-y-8">
                     {tutor.reviews.map((review: any) => (
-                      <div key={review.id} className="group border-b last:border-none pb-8 last:pb-0">
+                      <div
+                        key={review.id}
+                        className="group border-b last:border-none pb-8 last:pb-0"
+                      >
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-4">
                             <Avatar className="h-10 w-10 border-2 border-primary/10">
-                              <AvatarImage src={review.student?.user?.image || ""} />
-                              <AvatarFallback>{review.student?.user?.name?.charAt(0)}</AvatarFallback>
+                              <AvatarImage
+                                src={review.student?.user?.image || ""}
+                              />
+                              <AvatarFallback>
+                                {review.student?.user?.name?.charAt(0)}
+                              </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-bold">{review.student?.user?.name}</p>
-                              <p className="text-xs text-muted-foreground">{format(new Date(review.createdAt), "MMMM d, yyyy")}</p>
+                              <p className="font-bold">
+                                {review.student?.user?.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {format(
+                                  new Date(review.createdAt),
+                                  "MMMM d, yyyy",
+                                )}
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-1 px-3 py-1 bg-yellow-400/10 rounded-full">
                             <Star className="h-3 w-3 fill-yellow-400 text-yellow-500" />
-                            <span className="text-sm font-black text-yellow-600">{review.rating}</span>
+                            <span className="text-sm font-black text-yellow-600">
+                              {review.rating}
+                            </span>
                           </div>
                         </div>
                         <p className="text-muted-foreground italic pl-14 relative">
-                          <span className="absolute left-10 top-0 text-primary text-2xl font-serif opacity-30">"</span>
+                          <span className="absolute left-10 top-0 text-primary text-2xl font-serif opacity-30">
+                            "
+                          </span>
                           {review.comment}
                         </p>
                       </div>
@@ -164,37 +184,25 @@ export default function PublicTutorProfile() {
 
           {/* Right Column: Booking Sidecard */}
           <div className="space-y-8 lg:sticky lg:top-24 h-fit">
-            <BookingSelector 
-              tutor={tutor} 
-              pricings={tutor.pricings} 
-              availabilities={tutor.availabilities} 
+            <BookingSelector
+              tutor={tutor}
+              pricings={tutor.pricings}
+              availabilities={tutor.availabilities}
             />
-            
-            {/* Quick Info Card */}
+
             <Card className="rounded-[2rem] border-none shadow-lg bg-zinc-900 text-white dark:bg-white dark:text-black">
               <CardContent className="p-8 space-y-6">
                 <h4 className="font-bold flex items-center gap-2">
                   <Info className="h-4 w-4 text-primary" />
-                  Things to Note
+                  Quick Info
                 </h4>
-                <ul className="space-y-4 text-sm opacity-80">
-                  <li className="flex items-start gap-2">
-                    <ChevronRight className="h-4 w-4 mt-0.5 text-primary" />
-                    Sessions take place via Jitsi Meet.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ChevronRight className="h-4 w-4 mt-0.5 text-primary" />
-                    You can cancel up to 24h before.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ChevronRight className="h-4 w-4 mt-0.5 text-primary" />
-                    Payments are handled securely.
-                  </li>
-                </ul>
+                <p className="text-sm opacity-70">
+                  Select a plan and time slot to book your session. You must be
+                  logged in to complete the payment.
+                </p>
               </CardContent>
             </Card>
           </div>
-
         </div>
       </div>
     </div>
