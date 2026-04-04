@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { useSession } from "@/lib/auth-client";
 import {
   Users,
   Loader2,
@@ -47,6 +48,7 @@ interface AdminUser {
 
 export default function AdminUsersPage() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
 
@@ -209,7 +211,7 @@ export default function AdminUsersPage() {
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className={user.isBanned ? "text-green-600 focus:text-green-600" : "text-destructive focus:text-destructive"}
-                            disabled={toggleBanMutation.isPending || user.role === "STUDENT"}
+                            disabled={toggleBanMutation.isPending || user.role === "ADMIN" || user.id === session?.user?.id}
                             onClick={() => toggleBanMutation.mutate({ 
                               userId: user.id, 
                               role: user.role,
@@ -228,9 +230,14 @@ export default function AdminUsersPage() {
                               </>
                             )}
                           </DropdownMenuItem>
-                          {user.role === "STUDENT" && (
+                          {user.role === "ADMIN" && (
                             <div className="px-2 py-1.5 text-[10px] text-muted-foreground italic border-t mt-1">
-                              Student status cannot be modified
+                              Admin accounts cannot be banned
+                            </div>
+                          )}
+                          {user.id === session?.user?.id && (
+                            <div className="px-2 py-1.5 text-[10px] text-muted-foreground italic border-t mt-1">
+                              You cannot ban your own account
                             </div>
                           )}
                         </DropdownMenuContent>
