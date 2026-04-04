@@ -2,11 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { 
-  Clock, 
-  Loader2,
-  Search
-} from "lucide-react";
+import { Clock, Loader2, Search } from "lucide-react";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -25,7 +21,12 @@ import { Input } from "@/components/ui/input";
 export default function AdminBookingsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: bookings, isLoading, isError, error } = useQuery({
+  const {
+    data: bookings,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["admin-bookings-list"],
     queryFn: async () => {
       const { data } = await api.get<any[]>("/admin/bookings");
@@ -33,12 +34,13 @@ export default function AdminBookingsPage() {
     },
   });
 
-  const filteredBookings = bookings?.filter((booking) => {
-    const studentName = booking.student?.name?.toLowerCase() ?? "";
-    const tutorName = booking.tutor?.user?.name?.toLowerCase() ?? "";
-    const query = searchQuery.toLowerCase();
-    return studentName.includes(query) || tutorName.includes(query);
-  }) ?? [];
+  const filteredBookings =
+    bookings?.filter((booking) => {
+      const studentName = booking.student?.user?.name?.toLowerCase() ?? "";
+      const tutorName = booking.tutor?.user?.name?.toLowerCase() ?? "";
+      const query = searchQuery.toLowerCase();
+      return studentName.includes(query) || tutorName.includes(query);
+    }) ?? [];
 
   return (
     <div className="space-y-6">
@@ -71,7 +73,9 @@ export default function AdminBookingsPage() {
           ) : isError ? (
             <div className="py-12 text-center text-destructive">
               <p>Failed to load bookings.</p>
-              <p className="text-sm">{(error as any)?.message ?? "Try again later."}</p>
+              <p className="text-sm">
+                {(error as any)?.message ?? "Try again later."}
+              </p>
             </div>
           ) : filteredBookings.length === 0 ? (
             <div className="py-12 text-center text-muted-foreground">
@@ -94,12 +98,16 @@ export default function AdminBookingsPage() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Avatar className="h-7 w-7 text-[10px]">
-                          <AvatarImage src={booking.student?.image || ""} />
+                          <AvatarImage
+                            src={booking.student?.user?.image || ""}
+                          />
                           <AvatarFallback>
-                            {booking.student?.name?.charAt(0) ?? "?"}
+                            {booking.student?.user?.name?.charAt(0) ?? "?"}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="font-medium text-sm">{booking.student?.name}</span>
+                        <span className="font-medium text-sm">
+                          {booking.student?.user?.name}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -110,7 +118,9 @@ export default function AdminBookingsPage() {
                             {booking.tutor?.user?.name?.charAt(0) ?? "?"}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="font-medium text-sm">{booking.tutor?.user?.name}</span>
+                        <span className="font-medium text-sm">
+                          {booking.tutor?.user?.name}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -119,23 +129,29 @@ export default function AdminBookingsPage() {
                           {format(new Date(booking.startTime), "MMM d, yyyy")}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {format(new Date(booking.startTime), "p")} ({booking.pricing?.durationMinutes ?? 0}m)
+                          {format(new Date(booking.startTime), "p")} (
+                          {booking.pricing?.durationMinutes ?? 0}m)
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <span className="font-medium text-sm">
-                        ৳{booking.pricing?.amount ?? 0}
+                        ৳{booking.pricing?.price ?? 0}
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Badge 
-                        variant="secondary" 
+                      <Badge
+                        variant="secondary"
                         className={`font-normal text-[10px] uppercase tracking-wider ${
-                          booking.status === "COMPLETED" ? "bg-green-500/10 text-green-600 hover:bg-green-500/10" : 
-                          booking.status === "CONFIRMED" ? "bg-blue-500/10 text-blue-600 hover:bg-blue-500/10" :
-                          booking.status === "CANCELLED" ? "bg-red-500/10 text-red-600 hover:bg-red-500/10" :
-                          booking.status === "PENDING" ? "bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/10" : ""
+                          booking.status === "COMPLETED"
+                            ? "bg-green-500/10 text-green-600 hover:bg-green-500/10"
+                            : booking.status === "CONFIRMED"
+                              ? "bg-blue-500/10 text-blue-600 hover:bg-blue-500/10"
+                              : booking.status === "CANCELLED"
+                                ? "bg-red-500/10 text-red-600 hover:bg-red-500/10"
+                                : booking.status === "PENDING"
+                                  ? "bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/10"
+                                  : ""
                         }`}
                       >
                         {booking.status}
