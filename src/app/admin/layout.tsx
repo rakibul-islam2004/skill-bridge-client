@@ -1,3 +1,5 @@
+"use client";
+
 import AdminSidebar from "@/components/admin/admin-sidebar";
 import { RoleGuard } from "@/components/providers/role-guard";
 import { useState } from "react";
