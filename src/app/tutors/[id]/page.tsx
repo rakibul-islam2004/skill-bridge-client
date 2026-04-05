@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   Star,
   ShieldCheck,
@@ -10,22 +10,55 @@ import {
   MessageSquare,
   Loader2,
   Info,
-  CalendarDays,
   Award,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { format } from "date-fns";
 import Link from "next/link";
 import { BookingSelector } from "../../../components/public/booking-selector";
 
+interface TutorCategory {
+  id: string;
+  category: { name: string };
+}
+
+interface TutorReview {
+  id: string;
+  comment: string;
+  student?: { user?: { name?: string; image?: string } };
+}
+
+interface Pricing {
+  id: string;
+  durationMinutes: number;
+  price: number;
+}
+
+interface Availability {
+  id: string;
+  startTime: string;
+  bookings?: { id: string }[];
+}
+
+interface PublicTutorProfileData {
+  id: string;
+  user?: { name?: string; image?: string };
+  ratingAvg?: number | null;
+  experience?: number | null;
+  experienceDetails?: string | null;
+  bio?: string | null;
+  tutorCategories?: TutorCategory[];
+  pricings?: Pricing[];
+  availabilities?: Availability[];
+  reviews?: TutorReview[];
+}
+
 export default function PublicTutorProfile() {
   const { id } = useParams();
-  const pathname = usePathname();
 
-  const { data: tutor, isLoading } = useQuery({
+  const { data: tutor, isLoading } = useQuery<PublicTutorProfileData | null>({
     queryKey: ["public-tutor", id],
     queryFn: async () => {
       const { data } = await api.get(`/booking/tutors/${id}`);
@@ -53,19 +86,14 @@ export default function PublicTutorProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black pb-20 font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pb-20 font-sans">
       {/* PREMIUM DARK BANNER SECTION */}
-      <div className="h-80 w-full bg-zinc-950 relative overflow-hidden shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 via-black to-black opacity-95" />
-        {/* Subtle Texture to prevent "blind" black blending */}
+      <div className="relative h-80 w-full overflow-hidden shadow-2xl bg-linear-to-br from-slate-950 via-slate-900 to-slate-800">
+        <div className="absolute inset-0 bg-linear-to-br from-slate-950 via-slate-900 to-slate-800 opacity-95" />
         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com')]" />
-
-        {/* Lighting effects for depth */}
-        <div className="absolute top-10 right-10 h-64 w-64 bg-primary/20 rounded-full blur-[120px] opacity-60" />
-        <div className="absolute bottom-0 left-20 h-48 w-48 bg-blue-500/10 rounded-full blur-[100px] opacity-40" />
-
-        {/* Defining bottom divider */}
-        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute top-10 right-10 h-64 w-64 rounded-full bg-primary/20 blur-[120px] opacity-70" />
+        <div className="absolute bottom-0 left-14 h-52 w-52 rounded-full bg-sky-500/10 blur-[100px] opacity-50" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/15 to-transparent" />
       </div>
 
       <div className="container mx-auto px-4 -mt-40 relative z-10">
@@ -75,7 +103,7 @@ export default function PublicTutorProfile() {
               <CardContent className="p-8 sm:p-14">
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-10">
                   <div className="relative">
-                    <Avatar className="h-44 w-44 border-[8px] border-white dark:border-zinc-800 shadow-2xl">
+                    <Avatar className="h-44 w-44 border-8 border-white dark:border-zinc-800 shadow-2xl">
                       <AvatarImage
                         src={tutor.user?.image || ""}
                         className="object-cover"
@@ -115,12 +143,12 @@ export default function PublicTutorProfile() {
                     </div>
 
                     <div className="flex flex-wrap justify-center md:justify-start gap-2 pt-2">
-                      {tutor.tutorCategories?.map((tc: any) => (
+                      {tutor.tutorCategories?.map((tc: TutorCategory) => (
                         <Badge
                           key={tc.id}
-                          className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-none px-5 py-2 rounded-full text-xs font-bold shadow-sm"
+                          className="bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-slate-100 border-none px-5 py-2 rounded-full text-xs font-bold shadow-sm"
                         >
-                          {tc.category?.name}
+                          {tc.category.name}
                         </Badge>
                       ))}
                     </div>
@@ -135,12 +163,12 @@ export default function PublicTutorProfile() {
                     </h3>
                     <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-800" />
                   </div>
-                  <p className="text-xl leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line font-medium italic">
-                    "
+                  <p className="text-xl leading-relaxed text-slate-700 dark:text-slate-300 whitespace-pre-line font-medium italic">
+                    &quot;
                     {tutor.experienceDetails ||
                       tutor.bio ||
                       "Success-driven education focused on student results."}
-                    "
+                    &quot;
                   </p>
                 </div>
               </CardContent>
@@ -152,8 +180,8 @@ export default function PublicTutorProfile() {
                 Feedback
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {tutor.reviews?.length > 0 ? (
-                  tutor.reviews.map((review: any) => (
+                {tutor.reviews && tutor.reviews.length > 0 ? (
+                  tutor.reviews.map((review) => (
                     <Card
                       key={review.id}
                       className="rounded-[2.5rem] border-none shadow-lg bg-white dark:bg-zinc-900 p-8"
@@ -168,7 +196,7 @@ export default function PublicTutorProfile() {
                         </p>
                       </div>
                       <p className="text-zinc-500 dark:text-zinc-400 text-sm italic">
-                        "{review.comment}"
+                        &quot;{review.comment}&quot;
                       </p>
                     </Card>
                   ))
@@ -185,11 +213,11 @@ export default function PublicTutorProfile() {
           <div className="space-y-8 lg:sticky lg:top-8 h-fit">
             <BookingSelector
               tutor={tutor}
-              pricings={tutor.pricings}
-              availabilities={tutor.availabilities}
+              pricings={tutor.pricings ?? []}
+              availabilities={tutor.availabilities ?? []}
             />
 
-            <Card className="rounded-[3rem] border-none shadow-2xl bg-zinc-950 text-white overflow-hidden">
+            <Card className="rounded-[3rem] border-none shadow-2xl bg-slate-950/95 dark:bg-zinc-900/95 text-white overflow-hidden backdrop-blur-sm">
               <CardContent className="p-10 space-y-6 relative">
                 <div className="absolute top-0 right-0 p-8 opacity-10">
                   <Info className="h-16 w-16" />
