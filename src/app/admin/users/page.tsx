@@ -52,7 +52,12 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
 
-  const { data: users, isLoading, isError, error } = useQuery({
+  const {
+    data: users,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["admin-users-list"],
     queryFn: async () => {
       const { data } = await api.get<any[]>("/admin/users");
@@ -66,19 +71,27 @@ export default function AdminUsersPage() {
         }
         return {
           ...user,
-          isBanned
+          isBanned,
         };
       }) as AdminUser[];
     },
   });
 
   const toggleBanMutation = useMutation({
-    mutationFn: async ({ userId, role, isBanned }: { userId: string; role: string; isBanned: boolean }) => {
+    mutationFn: async ({
+      userId,
+      role,
+      isBanned,
+    }: {
+      userId: string;
+      role: string;
+      isBanned: boolean;
+    }) => {
       // If currently isBanned, we want to unban (isActive: true)
       // If currently not isBanned, we want to ban (isActive: false)
       await api.patch(`/admin/users/${userId}/status`, {
         isActive: isBanned,
-        role
+        role,
       });
     },
     onSuccess: () => {
@@ -86,18 +99,23 @@ export default function AdminUsersPage() {
       toast.success("User status updated.");
     },
     onError: (err: { response?: { data?: { message?: string } } }) => {
-      toast.error(err.response?.data?.message ?? "Failed to update user status.");
+      toast.error(
+        err.response?.data?.message ?? "Failed to update user status.",
+      );
     },
   });
 
-  const filteredUsers = users?.filter((user) => {
-    const nameMatch = user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false;
-    const emailMatch = user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false;
-    const matchesSearch = nameMatch || emailMatch;
-    
-    const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
-    return matchesSearch && matchesRole;
-  }) ?? [];
+  const filteredUsers =
+    users?.filter((user) => {
+      const nameMatch =
+        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false;
+      const emailMatch =
+        user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false;
+      const matchesSearch = nameMatch || emailMatch;
+
+      const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
+      return matchesSearch && matchesRole;
+    }) ?? [];
 
   return (
     <div className="space-y-6">
@@ -136,7 +154,11 @@ export default function AdminUsersPage() {
                   <option value="ADMIN">Admins</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                  <svg className="h-4 w-4 fill-current text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <svg
+                    className="h-4 w-4 fill-current text-muted-foreground"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
                 </div>
@@ -152,7 +174,13 @@ export default function AdminUsersPage() {
           ) : isError ? (
             <div className="py-12 text-center text-destructive">
               <p>Failed to load users.</p>
-              <p className="text-sm">{(error as Error & { response?: { data?: { message?: string } } })?.response?.data?.message ?? "Try again later."}</p>
+              <p className="text-sm">
+                {(
+                  error as Error & {
+                    response?: { data?: { message?: string } };
+                  }
+                )?.response?.data?.message ?? "Try again later."}
+              </p>
             </div>
           ) : filteredUsers.length === 0 ? (
             <div className="py-12 text-center text-muted-foreground">
@@ -184,14 +212,19 @@ export default function AdminUsersPage() {
                         <span className="font-medium">{user.name}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{user.email}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {user.email}
+                    </TableCell>
                     <TableCell>
                       <Badge variant="outline" className="font-normal">
                         {user.role}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.isBanned ? "destructive" : "secondary"} className="font-normal">
+                      <Badge
+                        variant={user.isBanned ? "destructive" : "secondary"}
+                        className="font-normal"
+                      >
                         {user.isBanned ? "Banned" : "Active"}
                       </Badge>
                     </TableCell>
@@ -210,13 +243,23 @@ export default function AdminUsersPage() {
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
-                            className={user.isBanned ? "text-green-600 focus:text-green-600" : "text-destructive focus:text-destructive"}
-                            disabled={toggleBanMutation.isPending || user.role === "ADMIN" || user.id === session?.user?.id}
-                            onClick={() => toggleBanMutation.mutate({ 
-                              userId: user.id, 
-                              role: user.role,
-                              isBanned: user.isBanned 
-                            })}
+                            className={
+                              user.isBanned
+                                ? "text-green-600 focus:text-green-600"
+                                : "text-destructive focus:text-destructive"
+                            }
+                            disabled={
+                              toggleBanMutation.isPending ||
+                              user.role === "ADMIN" ||
+                              user.id === session?.user?.id
+                            }
+                            onClick={() =>
+                              toggleBanMutation.mutate({
+                                userId: user.id,
+                                role: user.role,
+                                isBanned: user.isBanned,
+                              })
+                            }
                           >
                             {user.isBanned ? (
                               <>

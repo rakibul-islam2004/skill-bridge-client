@@ -62,18 +62,36 @@ export function BookingSelector({
       toast.warning("Please select a plan and time slot");
       return;
     }
+
+    const selectedPricing = pricings.find((p) => p.id === selectedPricingId);
+    if (!selectedPricing) {
+      toast.error("Selected pricing plan is not available.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await api.post("/booking/confirm", {
+      const response = await api.post("/payment/ssl-commerce/session", {
         tutorId: tutor.id,
         pricingId: selectedPricingId,
         availabilityId: selectedSlotId,
+        amount: selectedPricing.price,
+        currency: "BDT",
+        product_name: `${selectedPricing.durationMinutes} Min Session`,
+        product_category: "Online Tutoring",
+        customer_name: session.user?.name || "SkillBridge Student",
+        customer_email: session.user?.email || "demo@skillbridge.local",
+        customer_phone: session.user?.phone || "01700000000",
       });
-      queryClient.invalidateQueries({ queryKey: ["student-bookings"] });
-      toast.success("Booking confirmed!");
-      router.push("/student/bookings");
+
+      const data = response.data;
+      if (!data?.gatewayUrl) {
+        throw new Error(data?.message || "Payment initialization failed.");
+      }
+
+      window.location.href = data.gatewayUrl;
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Booking failed.");
+      toast.error(err.message || "Could not initialize payment.");
     } finally {
       setIsSubmitting(false);
     }
